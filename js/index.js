@@ -1,74 +1,41 @@
-const apiURL = "https://v2.api.noroff.dev/gamehub";
+import { fetchAllProducts } from "./api.js";
 
-async function getProducts() {
-  const loading = document.getElementById("loading");
-  const container = document.getElementById("productList");
+function card(item) {
+  return `
+    <a href="product.html?id=${item.id}" class="product-card">
+      <article>
+        <img src="${item.image.url}" alt="${item.image.alt}">
+        <h2>${item.title}</h2>
+        <p>Genre: ${item.genre}</p>
+        <p>Price: $${item.price}</p>
+      </article>
+    </a>
+  `;
+}
+
+async function displayProducts() {
+  const productsContainer = document.getElementById("products-container");
+  const loadingElement = document.getElementById("loading");
 
   try {
-    if (loading) loading.style.display = "block";
-
-    const response = await fetch(apiURL);
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
-
-    const json = await response.json();
-    return json.data;
+    const products = await fetchAllProducts();
+    productsContainer.innerHTML = products.map(card).join("");
   } catch (error) {
-    console.error(error);
-    if (container) {
-      container.innerHTML = "<p>Could not load products.</p>";
-    }
-    return null;
+    console.error("Error loading products:", error);
+    productsContainer.innerHTML = "<p>Failed to load products.</p>";
   } finally {
-    if (loading) loading.style.display = "none";
+    if (loadingElement) {
+      loadingElement.style.display = "none";
+    }
   }
 }
 
-function createProductCard(product) {
-  const card = document.createElement("div");
-  card.classList.add("card");
+displayProducts();
 
-  const title = document.createElement("h2");
-  title.textContent = product.title;
-
-  const img = document.createElement("img");
-  img.src = product.image?.url || "";
-  img.alt = product.title;
-  img.width = 200;
-
-  const price = document.createElement("p");
-  price.textContent = `Price: $${product.price}`;
-
-  const link = document.createElement("a");
-  link.href = `product.html?id=${product.id}`;
-  link.textContent = "View product";
-
-  card.appendChild(title);
-  card.appendChild(img);
-  card.appendChild(price);
-  card.appendChild(link);
-
-  return card;
+function updateCartCount() {
+  const count = getCartCount();
+  const cartSpan = document.getElementById("cart-count");
+  if (cartSpan) cartSpan.textContent = count;
 }
 
-function renderProducts(products) {
-  const container = document.getElementById("productList");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  products.forEach((product) => {
-    const card = createProductCard(product);
-    container.appendChild(card);
-  });
-}
-
-async function init() {
-  const products = await getProducts();
-  if (products && products.length) {
-    renderProducts(products);
-  }
-}
-
-init();
+updateCartCount();

@@ -1,60 +1,57 @@
-const productContainer = document.getElementById("product");
-const addBtn = document.getElementById("addToCartBtn");
-const productUrl = "https://v2.api.noroff.dev/gamehub/";
+import { fetchProductById } from "./api.js";
 
-const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get("id");
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
 
-async function getProduct() {
+async function loadProduct() {
+  const productContainer = document.getElementById("product");
+
+  if (!productId) {
+    productContainer.innerHTML = "<p>No product ID provided.</p>";
+    return;
+  }
+
   try {
-    const response = await fetch(productUrl + productId);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product");
+    const item = await fetchProductById(productId);
+
+    if (!item) {
+      productContainer.innerHTML = "<p>Product not found.</p>";
+      return;
     }
-    const json = await response.json();
-    return json.data;
+
+    productContainer.innerHTML = `
+      <article class="product-details">
+        <img src="${item.image.url}" alt="${item.image.alt}" />
+        <h2>${item.title}</h2>
+        <p>Genre: ${item.genre}</p>
+        <p>Price: $${item.price}</p>
+        <p>${item.description}</p>
+      </article>
+    `;
   } catch (error) {
-    console.error(error);
-    productContainer.innerHTML = "<p>Could not load product.</p>";
+    console.error("Error loading product:", error);
+    productContainer.innerHTML = "<p>Failed to load product.</p>";
   }
 }
 
-function renderProduct(product) {
-  productContainer.innerHTML = "";
+loadProduct();
 
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("card");
+const addToCartBtn = document.getElementById("addToCartBtn");
 
-  const title = document.createElement("h2");
-  title.textContent = product.title;
-
-  const img = document.createElement("img");
-  img.src = product.image?.url || "";
-  img.alt = product.title;
-  img.width = 250;
-
-  const desc = document.createElement("p");
-  desc.textContent = product.description;
-
-  const price = document.createElement("p");
-  price.textContent = `Price: $${product.price}`;
-
-  wrapper.appendChild(title);
-  wrapper.appendChild(img);
-  wrapper.appendChild(desc);
-  wrapper.appendChild(price);
-
-  productContainer.appendChild(wrapper);
+if (addToCartBtn) {
+  addToCartBtn.addEventListener("click", () => {
+    if (typeof addToCart === "function" && productId) {
+      addToCart(productId);
+    } else {
+      console.error("addToCart is not available or productId is missing.");
+    }
+  });
 }
 
-addBtn.addEventListener("click", () => {
-  addToCart(productId);
-  alert("Added to cart");
-});
-
-async function initProduct() {
-  const product = await getProduct();
-  if (product) renderProduct(product);
+function updateCartCount() {
+  const count = getCartCount();
+  const cartSpan = document.getElementById("cart-count");
+  if (cartSpan) cartSpan.textContent = count;
 }
 
-initProduct();
+updateCartCount();
