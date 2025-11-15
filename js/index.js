@@ -1,5 +1,10 @@
 import { fetchAllProducts } from "./api.js";
 
+function getCartCount() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart.length;
+}
+
 function card(item) {
   return `
     <a href="product.html?id=${item.id}" class="product-card">
@@ -11,6 +16,14 @@ function card(item) {
       </article>
     </a>
   `;
+}
+
+function updateCartCount() {
+  const cartSpan = document.getElementById("cart-count");
+  if (!cartSpan) return;
+
+  const count = getCartCount();
+  cartSpan.textContent = count;
 }
 
 async function displayProducts() {
@@ -29,13 +42,5 @@ async function displayProducts() {
     }
   }
 }
-
-displayProducts();
-
-function updateCartCount() {
-  const count = getCartCount();
-  const cartSpan = document.getElementById("cart-count");
-  if (cartSpan) cartSpan.textContent = count;
-}
-
 updateCartCount();
+displayProducts();
