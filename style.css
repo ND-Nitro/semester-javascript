@@ -109,3 +109,23 @@ button:hover {
   cursor: pointer;
   border-radius: 4px;
 }
+
+#categorie-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.categorie-btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  background: #4ea3ff;
+  color: #000;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.categorie-btn:hover {
+  filter: brightness(1.2);
+}

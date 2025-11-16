@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Gamehub | categorie</title>
+  </head>
+  <body>
+    <header>
+      <h1>GameHub</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="categorie.html">Categories</a>
+        <a href="checkout.html">Cart <span id="cart-count"></span></a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Browse by Categories</h2>
+      <div id="categorie-button"></div>
+
+      <div id="categorie-products"></div>
+
+      <div id="genre-buttons">
+        <button data-genre="Action">Action</button>
+        <button data-genre="Sports">Sports</button>
+        <button data-genre="Adventure">Adventure</button>
+        <button data-genre="Horror">Horror</button>
+      </div>
+      <div id="genre-products" class="grid"></div>
+    </main>
+    <script type="module" src="js/categorie.js"></script>
+  </body>
+</html>
