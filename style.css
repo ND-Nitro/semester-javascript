@@ -86,3 +86,26 @@ button {
 button:hover {
   filter: brightness(1.1);
 }
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.qty-btn {
+  background: #4ea3ff;
+  border: none;
+  padding: 0.3rem 0.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove-btn {
+  margin-top: 0.5rem;
+  background: #ff4747;
+  border: none;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  border-radius: 4px;
+}

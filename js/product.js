@@ -1,19 +1,16 @@
 import { fetchProductById } from "./api.js";
+import { addToCart, getCartCount } from "./utils.js";
+
+let currentProduct = null;
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
-
-function getCartCount() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  return cart.length;
-}
 
 function updateCartCount() {
   const cartSpan = document.getElementById("cart-count");
   if (!cartSpan) return;
 
-  const count = getCartCount();
-  cartSpan.textContent = count;
+  cartSpan.textContent = getCartCount();
 }
 
 async function loadProduct() {
@@ -26,6 +23,7 @@ async function loadProduct() {
 
   try {
     const item = await fetchProductById(productId);
+    currentProduct = item;
 
     if (!item) {
       productContainer.innerHTML = "<p>Product not found.</p>";
@@ -51,14 +49,13 @@ const addToCartBtn = document.getElementById("addToCartBtn");
 
 if (addToCartBtn) {
   addToCartBtn.addEventListener("click", () => {
-    if (typeof addToCart === "function" && productId) {
-      addToCart(productId);
-      updateCartCount();
-    } else {
-      console.error("addToCart is not available or productId is missing.");
-    }
+    if (!currentProduct) return;
+
+    addToCart(currentProduct, 1);
+
+    updateCartCount();
   });
 }
 
-updateCartCount();
 loadProduct();
+updateCartCount();

@@ -1,15 +1,11 @@
 import { fetchAllProducts } from "./api.js";
-
-function getCartCount() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  return cart.length;
-}
+import { getCartCount } from "./utils.js";
 
 function card(item) {
   return `
     <a href="product.html?id=${item.id}" class="product-card">
       <article>
-        <img src="${item.image.url}" alt="${item.image.alt}">
+        <img src="${item.image?.url || ""}" alt="${item.image?.alt || ""}">
         <h2>${item.title}</h2>
         <p>Genre: ${item.genre}</p>
         <p>Price: $${item.price}</p>
@@ -22,8 +18,7 @@ function updateCartCount() {
   const cartSpan = document.getElementById("cart-count");
   if (!cartSpan) return;
 
-  const count = getCartCount();
-  cartSpan.textContent = count;
+  cartSpan.textContent = getCartCount();
 }
 
 async function displayProducts() {
@@ -42,5 +37,6 @@ async function displayProducts() {
     }
   }
 }
+
 updateCartCount();
 displayProducts();

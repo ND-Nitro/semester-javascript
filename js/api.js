@@ -14,6 +14,12 @@ export async function fetchAllProducts() {
 }
 
 export async function fetchProductById(id) {
-  const products = await fetchAllProducts();
-  return products.find((product) => product.id === id);
+  const response = await fetch(`${apiURL}/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to load product by ID");
+  }
+
+  const json = await response.json();
+  return json.data;
 }
