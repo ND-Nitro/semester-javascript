@@ -1,4 +1,4 @@
-import { getCart, saveCart, getCartCount, clearCart } from "./utils.js";
+import { getCart, saveCart, getCartCount } from "./utils.js";
 
 function updateCartCount() {
   const cartSpan = document.getElementById("cart-count");
